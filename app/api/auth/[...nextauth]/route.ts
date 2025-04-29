@@ -20,14 +20,16 @@ export const authOptions: NextAuthOptions = {
             async authorize(credentials) {
                 try {
                     const response = await login(credentials!.email, credentials!.password);
-
-                    if (response && response.access_token) {
+            
+                    if (response && response.access) {
                         return {
-                            ...response.user,
-                            accessToken: response.access_token,
+                            id: response.user?.id, // ajuste conforme sua API retorna o usuário
+                            email: credentials!.email,
+                            accessToken: response.access,
+                            refreshToken: response.refresh,
                         };
                     }
-
+            
                     throw new Error("Token de acesso não encontrado.");
                 } catch (err) {
                     console.error("Erro ao autenticar com email/senha:", err);
@@ -63,15 +65,16 @@ export const authOptions: NextAuthOptions = {
                 }
             }
 
-            if (user && user.access) {
-                token.accessToken = user.access;
-                token.refreshToken = user.refresh;
+            if (user && user.accessToken) {
+                token.accessToken = user.accessToken;
+                token.refreshToken = user.refreshToken;
             }
 
             return token;
         },
         async session({ session, token }) {
             session.accessToken = token.accessToken as string;
+            session.refreshToken = token.refreshToken as string;
             return session;
         },
     },
