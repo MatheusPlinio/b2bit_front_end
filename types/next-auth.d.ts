@@ -10,11 +10,18 @@ declare module "next-auth" {
     }
 
     interface Session {
+        user: {
+            id: number;
+            email?: string | null;
+            name?: string | null;
+            image?: string | null;
+        };
         accessToken: string;
         refreshToken: string;
     }
 
     interface JWT {
+        id?: number;
         accessToken: string;
         refreshToken: string;
     }

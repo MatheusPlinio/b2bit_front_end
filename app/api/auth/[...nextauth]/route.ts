@@ -23,7 +23,7 @@ export const authOptions: NextAuthOptions = {
             
                     if (response && response.access) {
                         return {
-                            id: response.user?.id, // ajuste conforme sua API retorna o usuário
+                            id: response.user?.id,
                             email: credentials!.email,
                             accessToken: response.access,
                             refreshToken: response.refresh,
@@ -66,6 +66,7 @@ export const authOptions: NextAuthOptions = {
             }
 
             if (user && user.accessToken) {
+                token.id = user.id;
                 token.accessToken = user.accessToken;
                 token.refreshToken = user.refreshToken;
             }
@@ -75,6 +76,7 @@ export const authOptions: NextAuthOptions = {
         async session({ session, token }) {
             session.accessToken = token.accessToken as string;
             session.refreshToken = token.refreshToken as string;
+            session.user.id = token.id as number;
             return session;
         },
     },
