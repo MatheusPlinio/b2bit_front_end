@@ -10,6 +10,9 @@ import { useState } from "react";
 import EditPostForm from "./EditPostForm";
 import DeletePostButton from "./DeletePostButton";
 import { LikeButton } from "./LikeButton";
+import { HoverCard } from "@radix-ui/react-hover-card";
+import { HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
+import { UserHoverCard } from "./UserHoverCard";
 
 type Post = {
     id: number;
@@ -55,11 +58,23 @@ export function Feed() {
                 <CreatePostForm />
                 {posts?.map((post) => (
                     <div key={post.id} className="relative border-t border-b border-gray-950 p-4">
-                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gray-950"></div>
-                        <div className="absolute right-0 top-0 bottom-0 w-1 bg-gray-950"></div>
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gray-950" />
+                        <div className="absolute right-0 top-0 bottom-0 w-1 bg-gray-950" />
 
                         <div className="text-sm text-muted-foreground">
-                            @{post.author.username} •{" "}
+                            <HoverCard>
+                                <HoverCardTrigger asChild>
+                                    <span className="font-semibold cursor-pointer text-blue-600 hover:underline">
+                                        @{post.author.username}
+                                    </span>
+                                </HoverCardTrigger>
+                                <HoverCardContent className="p-0 w-64">
+                                    <UserHoverCard
+                                        userId={post.author.id}
+                                    />
+                                </HoverCardContent>
+                            </HoverCard>{" "}
+                            •{" "}
                             <span className="text-xs">
                                 {new Date(post.created_at).toLocaleString()}
                             </span>
@@ -86,7 +101,7 @@ export function Feed() {
                             <div className="flex gap-2 absolute top-2 right-2">
                                 <button
                                     onClick={() => handleEditClick(post)}
-                                    className="absolute top-2 right-2 text-muted-foreground hover:text-blue-500"
+                                    className="text-muted-foreground hover:text-blue-500"
                                 >
                                     <Edit3 size={16} />
                                 </button>
