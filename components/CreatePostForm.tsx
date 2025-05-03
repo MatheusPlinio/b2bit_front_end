@@ -27,9 +27,9 @@ export default function CreatePostForm() {
 
     const queryClient = useQueryClient()
 
-    const mutation = useMutation({
+    const { mutate } = useMutation({
         mutationFn: async (data: PostFormData) => {
-            await api.post('api/post/', data)
+            await api.post('api/post/create/', data)
         },
         onSuccess: () => {
             toast.success('Post enviado!')
@@ -40,7 +40,7 @@ export default function CreatePostForm() {
     })
 
     const onSubmit = (data: PostFormData) => {
-        mutation.mutate(data)
+        mutate(data)
     }
 
     return (

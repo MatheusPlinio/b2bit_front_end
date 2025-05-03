@@ -29,7 +29,11 @@ type Post = {
 };
 
 const fetchPosts = async (): Promise<Post[]> => {
-    const res = await api.get('api/posts/');
+    const res = await api.get('api/user/feed/');
+
+    if (res.status === 202) {
+        throw new Error("Feed ainda em processamento");
+    }
     return res.data;
 };
 
@@ -44,6 +48,8 @@ export function Feed() {
     const { data: posts, isLoading, error } = useQuery({
         queryKey: ['posts'],
         queryFn: fetchPosts,
+        retry: 2,
+        retryDelay: 1000
     });
 
     if (isLoading) return <p>Carregando feed...</p>;

@@ -1,7 +1,7 @@
 import { signIn } from "next-auth/react";
 
 export async function login(email: string, password: string) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login/`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -56,7 +56,7 @@ export async function registerWithCredentials(data: {
     email: string;
     password: string;
 }) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/register/`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
