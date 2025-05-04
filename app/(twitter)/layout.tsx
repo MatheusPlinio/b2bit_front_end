@@ -1,4 +1,5 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import Header from "@/components/Header";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
@@ -16,7 +17,10 @@ export default async function ReelsLayout({
 
     return (
         <div className="flex">
-            <main className="flex-1 p-6 overflow-auto">{children}</main>
+            <main className="flex-1 overflow-auto">
+                <Header />
+                {children}
+            </main>
         </div>
     );
 }

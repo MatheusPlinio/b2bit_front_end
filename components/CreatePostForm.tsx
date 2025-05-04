@@ -29,7 +29,7 @@ export default function CreatePostForm() {
 
     const { mutate } = useMutation({
         mutationFn: async (data: PostFormData) => {
-            await api.post('api/post/create/', data)
+            await api.post('api/posts/create/', data)
         },
         onSuccess: () => {
             toast.success('Post enviado!')
@@ -44,27 +44,29 @@ export default function CreatePostForm() {
     }
 
     return (
-        <div className="relative border-t border-b border-gray-950 p-4 bg-gray-100">
-            <div className="absolute left-0 top-0 bottom-0 w-1 bg-gray-950" />
-            <div className="absolute right-0 top-0 bottom-0 w-1 bg-gray-950" />
-
+        <div className="bg-[#f4f5f7] rounded-2xl shadow-sm border border-[#e0e0e0] mt-4 px-5 py-4 mb-6">
             <div className="flex gap-4">
-                <div className="w-10 h-10 bg-gray-200 flex items-center justify-center rounded-full text-lg">
+                <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-lg">
                     👤
                 </div>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="flex-1">
                     <Textarea
-                        {...register('content')}
+                        {...register('content', { required: 'Digite algo para postar' })}
                         placeholder="O que está acontecendo?"
-                        className="resize-none text-sm border-gray-700"
+                        className="resize-none text-base border-0 focus-visible:border-2 focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-gray-500 text-[#8899a6]"
                     />
                     {errors.content && (
                         <p className="text-xs text-red-500 mt-1">{errors.content.message}</p>
                     )}
 
-                    <div className="flex justify-end mt-2">
-                        <Button className='cursor-pointer' type="submit" variant="default" disabled={isSubmitting}>
+                    <div className="flex justify-end mt-3">
+                        <Button
+                            type="submit"
+                            variant="default"
+                            disabled={isSubmitting}
+                            className="rounded-full px-6 cursor-pointer"
+                        >
                             Postar
                         </Button>
                     </div>

@@ -14,7 +14,7 @@ export default function DeletePostButton({ postId }: DeletePostButtonProps) {
 
     const deletePostMutation = useMutation({
         mutationFn: async () => {
-            await api.delete(`/api/post/${postId}/delete/`);
+            await api.delete(`/api/posts/${postId}/delete/`);
         },
         onSuccess: () => {
             toast.success('Post deletado com sucesso.');

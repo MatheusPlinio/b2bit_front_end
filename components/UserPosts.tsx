@@ -1,56 +1,51 @@
 'use client';
-
-import api from "@/lib/axios";
-import { toast } from "sonner";
-import { useQuery } from "@tanstack/react-query";
-import CreatePostForm from "./CreatePostForm";
 import { useSession } from "next-auth/react";
-import { Edit3 } from "lucide-react";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/lib/axios";
+import { Post } from "@/types/Post";
+import { toast } from "sonner";
+import CreatePostForm from "./CreatePostForm";
 import EditPostForm from "./EditPostForm";
-import DeletePostButton from "./DeletePostButton";
 import { LikeButton } from "./LikeButton";
-import { HoverCard } from "@radix-ui/react-hover-card";
-import { HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
 import { UserHoverCard } from "./UserHoverCard";
-import Link from "next/link";
+import { Edit3 } from "lucide-react";
+import DeletePostButton from "./DeletePostButton";
 
-type Post = {
-    id: number;
-    content: string;
-    created_at: string;
-    likes_count: number;
-    is_liked: boolean;
-    author: {
-        id: number;
-        username: string;
-        email: string;
-    };
+interface UserPostsProps {
+    userId?: number;
+}
 
-};
-
-const fetchPosts = async (): Promise<Post[]> => {
-    const res = await api.get('api/user/feed/');
+const fetchPosts = async (userId?: number): Promise<Post[]> => {
+    const res = await api.get('api/posts/', {
+        params: {
+            user_id: userId,
+        },
+    });
 
     if (res.status === 202) {
         throw new Error("Feed ainda em processamento");
     }
+
     return res.data;
 };
 
-export function Feed() {
+export default function UserPosts({ userId }: UserPostsProps) {
     const { data: session } = useSession();
-    const userId = session?.user.id;
+    const authenticatedUserId = session?.user.id;
 
     const [editingPostId, setEditingPostId] = useState<number | null>(null);
     const handleEditClick = (post: Post) => {
         setEditingPostId(post.id);
     };
+
     const { data: posts, isLoading, error } = useQuery({
-        queryKey: ['posts'],
-        queryFn: fetchPosts,
+        queryKey: ['posts', userId],
+        queryFn: () => fetchPosts(userId),
+        enabled: !!userId,
         retry: 2,
-        retryDelay: 1000
+        retryDelay: 1000,
     });
 
     if (isLoading) return <p>Carregando feed...</p>;
@@ -60,7 +55,7 @@ export function Feed() {
     }
 
     return (
-        <div className="flex justify-center  px-4 bg-[#f4f5f7] min-h-screen">
+        <div className="flex justify-center px-4 bg-[#f4f5f7] min-h-screen">
             <div className="w-full max-w-2xl space-y-4">
                 <CreatePostForm />
                 {posts?.map((post) => (
@@ -71,11 +66,9 @@ export function Feed() {
                         <div className="text-sm text-[#5f6b7a] mb-2">
                             <HoverCard>
                                 <HoverCardTrigger asChild>
-                                    <Link href={`/profile/${post.author.id}`}>
-                                        <span className="font-semibold cursor-pointer text-[#1a73e8] hover:underline">
-                                            @{post.author.username}
-                                        </span>
-                                    </Link>
+                                    <span className="font-semibold cursor-pointer text-[#1a73e8] hover:underline">
+                                        @{post.author.username}
+                                    </span>
                                 </HoverCardTrigger>
                                 <HoverCardContent className="p-0 w-64">
                                     <UserHoverCard userId={post.author.id} />
@@ -104,7 +97,7 @@ export function Feed() {
                             </div>
                         )}
 
-                        {post.author.id === userId && editingPostId !== post.id && (
+                        {post.author.id === authenticatedUserId && editingPostId !== post.id && (
                             <div className="flex gap-2 absolute top-2 right-2 text-[#8899a6]">
                                 <button
                                     onClick={() => handleEditClick(post)}

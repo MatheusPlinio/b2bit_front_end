@@ -26,7 +26,7 @@ export default function EditPostForm({
 
     const mutation = useMutation({
         mutationFn: async ({ id, content }: { id: number; content: string }) => {
-            const res = await api.put(`api/post/${id}/`, { content });
+            const res = await api.put(`api/posts/${id}/`, { content });
             return res.data;
         },
         onSuccess: () => {
