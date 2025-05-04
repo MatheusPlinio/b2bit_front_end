@@ -18,7 +18,7 @@ export default function Header() {
                 {user && (
                     <nav className="flex gap-6 items-center text-sm font-medium">
                         <Link
-                            href={`/profile/${user.id}/`}
+                            href="#"
                             className="hover:underline flex items-center gap-1"
                         >
                             <User size={16} />
@@ -26,14 +26,14 @@ export default function Header() {
                         </Link>
 
                         <Link
-                            href={`/profile/${user.id}/followers`}
+                            href="#"
                             className="hover:underline"
                         >
                             Seguidores
                         </Link>
 
                         <Link
-                            href={`/profile/${user.id}/following`}
+                            href="#"
                             className="hover:underline"
                         >
                             Seguindo

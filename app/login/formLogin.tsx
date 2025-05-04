@@ -16,7 +16,7 @@ export default function FormLogin() {
     const onSubmit = (data: Tlogin) => {
         submit(data, {
             request: (data) => loginWithCredentials(data.email, data.password),
-            onSuccessRedirect: '/dashboard',
+            onSuccessRedirect: '/feed',
         })
     }
 
